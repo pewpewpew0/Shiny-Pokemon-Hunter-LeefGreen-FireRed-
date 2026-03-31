@@ -1,3 +1,4 @@
+"to run again from your project root, use this command: ./.venv/bin/python src/live_shiny_check.py"
 import cv2
 import numpy as np
 

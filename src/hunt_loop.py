@@ -1,3 +1,4 @@
+"to run again from your project root, use this command: ./.venv/bin/python src/hunt_loop.py"
 import cv2
 import numpy as np
 import random

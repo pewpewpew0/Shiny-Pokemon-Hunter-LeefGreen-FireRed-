@@ -1,3 +1,4 @@
+"to run again from your project root, use this command: ./.venv/bin/python src/star_detect_test.py"
 import cv2
 import numpy as np
 from pathlib import Path
