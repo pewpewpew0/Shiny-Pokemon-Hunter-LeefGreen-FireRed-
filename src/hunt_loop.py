@@ -109,17 +109,14 @@ def is_yes_prompt_page(image):
     return mask_ratio(hsv_mask(crop, [95, 60, 100], [125, 255, 255])) > 0.08
 
 def is_options_screen(image):
-    """
-    Screen 24: POKEMON/BAG/MANNY/SAVE/OPTION/EXIT menu box on right side.
-    Unique signature: the menu border reaches the very TOP of the screen (y=0),
-    while the YES/NO box only starts at y~28%. Crop the top-right corner
-    specifically to exploit this difference.
-    Validated scores — 24_options: 0.152 → True
-                       18_so: 0.003, 21_nickname: 0.003 → False
-    (12_continue scores 0.335 here but is caught by is_continue_page first)
-    """
     top_right = crop_relative(image, 0.62, 0.92, 0.00, 0.15)
-    return mask_ratio(hsv_mask(top_right, [95, 60, 100], [125, 255, 255])) > 0.10
+    top_left  = crop_relative(image, 0.00, 0.40, 0.00, 0.15)
+    right_blue = mask_ratio(hsv_mask(top_right, [95, 60, 100], [125, 255, 255]))
+    left_blue  = mask_ratio(hsv_mask(top_left,  [95, 60, 100], [125, 255, 255]))
+    # Options menu box is right-side only.
+    # Quest banner is full-width — both left and right will be blue.
+    # Require right is high AND left is NOT blue.
+    return (right_blue > 0.10) and (left_blue < 0.05)
 
 def is_summary_screen(image):
     """
@@ -129,7 +126,7 @@ def is_summary_screen(image):
                        all others: < 0.08                  → False
     """
     left = crop_relative(image, 0.00, 0.65, 0.10, 0.90)
-    return mask_ratio(hsv_mask(left, [75, 40, 80], [110, 255, 255])) > 0.10
+    return mask_ratio(hsv_mask(left, [75, 40, 80], [110, 255, 255])) > 0.35
 
 def detect_state(frame):
     """
